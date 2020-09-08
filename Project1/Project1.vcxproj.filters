@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InsertionSortAndMoveToForward.cpp">
+    <ClCompile Include="TransposeSearch.cpp">
       <Filter>헤더 파일\소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
