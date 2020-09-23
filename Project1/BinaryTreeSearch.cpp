@@ -96,6 +96,26 @@ void DisallocateAll(BTNode<int>* Root)
 	delete Root;
 }
 
+BTNode<int>* FindMinNode(BTNode<int>* CurrentNode , BTNode<int>* MinNode)
+{
+	if (CurrentNode->data < MinNode->data)
+	{
+		MinNode = CurrentNode;
+	}
+
+	if (CurrentNode->Left != NULL)
+	{
+		MinNode =  FindMinNode(CurrentNode->Left, MinNode);
+	}
+
+	if (CurrentNode->Right != NULL)
+	{
+		MinNode = FindMinNode(CurrentNode->Right, MinNode);
+	}
+
+	return MinNode;
+}
+
 BTNode<int>* RemoveAndRelocateData(BTNode<int>* Current, BTNode<int>* Parent, int pValue)
 {
 	BTNode<int>* Removal;
@@ -111,11 +131,52 @@ BTNode<int>* RemoveAndRelocateData(BTNode<int>* Current, BTNode<int>* Parent, in
 	}
 	else
 	{
-		//일치한것 삭제.
+		Removal = Current;
+		if (Current->Left == NULL && Current->Right == NULL)
+		{
+			if (Parent->Left == Current)
+			{
+				Parent->Left = NULL;
+				delete Removal;
+			}
+			else
+			{
+				Parent->Right = NULL;
+				delete Removal;
+			}
+		}
+		else
+		{
+			if (Current->Left != NULL && Current->Right != NULL)
+			{
+				BTNode<int>* MinNode = FindMinNode(Current->Right, Current->Right);
+				Removal = RemoveAndRelocateData(Current, NULL, MinNode->data);
+				
+				Current->data = MinNode->data;
+			}
+			else
+			{
 
-		//일치 한 것의 오른쪽 노드를 타서 - 1번
-			//일치 한 것의 자리에 오른쪽 노드 들 중 최소 값을 대입 - 2번
-			//해당 최소의 데이터가 엠티 해버리고 여기서 만약에 최소에 데이터가 또 있다면 루프 돌아서 1번으로 돌아감 - 3번
+				BTNode<int>* Temp = NULL;
+				if (Current->Left != NULL)
+				{
+					Temp = Current->Left;
+				}
+				else
+				{
+					Temp = Current->Right;
+				}
+
+				if (Parent->Left == Current)
+				{
+					Parent->Left = Temp;
+				}
+				else
+				{
+					Parent->Right = Temp;
+				}
+			}
+		}
 
 	}
 
@@ -159,7 +220,17 @@ int main()
 
 
 	PrintOutAll(Tree);
+	cout << "Remove 5" << endl;
+	cout << endl;
+	RemoveAndRelocateData(Tree, Tree, 5);
 
+	PrintOutAll(Tree);
+	cout << "Remove 8" << endl;
+	cout << endl;
+
+	RemoveAndRelocateData(Tree, Tree, 8);
+
+	PrintOutAll(Tree);
 
 	DisallocateAll(Tree);
 
