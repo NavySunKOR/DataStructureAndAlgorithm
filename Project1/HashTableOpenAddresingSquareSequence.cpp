@@ -107,6 +107,13 @@ void HASTABLE_Set(HashTable<int, int>* pTable, int pKey, int pOriginKey, int pVa
 int HASTABLE_Get(HashTable<int, int>* pTable, int pKey, int pOriginKey)
 {
 	int usingKey = pKey * pKey;
+
+	if (pKey > pTable->TableSize)
+	{
+		return -1;
+	}
+
+
 	if (pTable->Data[usingKey].Key == pOriginKey)
 	{
 		return pTable->Data[usingKey].Value;
